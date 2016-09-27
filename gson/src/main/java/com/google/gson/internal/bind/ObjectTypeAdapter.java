@@ -76,7 +76,23 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
       return in.nextString();
 
     case NUMBER:
-      return in.nextDouble();
+      final String numberAsString = in.nextString();
+      Object asNumber;
+      try {
+          asNumber = Integer.parseInt(numberAsString);
+      } catch (NumberFormatException e1) {
+          try {
+              asNumber = Long.parseLong(numberAsString);
+          } catch (NumberFormatException e2) {
+              try {
+                  asNumber = Float.parseFloat(numberAsString);
+              } catch (NumberFormatException e3) {
+                  asNumber = Double.parseDouble(numberAsString);
+              }
+          }
+      }
+
+      return asNumber;
 
     case BOOLEAN:
       return in.nextBoolean();
